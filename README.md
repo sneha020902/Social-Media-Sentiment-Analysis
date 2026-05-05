@@ -29,27 +29,36 @@ But sentiment alone (positive/negative) is not enough. Two people can both post 
 
 ## Architecture
 
+```
 Raw Social Media Post
-│
-▼
+        │
+        ▼
 Text Preprocessing
-(Lowercase, Remove URLs/@mentions/#hashtags, Stopword Removal, Lemmatization)
-│
-▼
+├── Lowercase
+├── Remove URLs, @mentions, #hashtags
+├── Remove stopwords
+└── Lemmatization
+        │
+        ▼
 TF-IDF Feature Extraction
-(50,000 features, unigrams + bigrams)
-│
-├──────────────────────────────────┐
-▼                                  ▼
-ML Sentiment Classification          Emotion Lexicon Detection
-(Logistic Regression — 77.61%)       (Joy / Sadness / Anger /
-(Naïve Bayes — 76.08%)               Fear / Surprise / Anticipation)
-(Linear SVM — 76.05%)
-│                                  │
-└──────────────┬───────────────────┘
-▼
-Combined Analysis + Confidence Score
-
+(50,000 features — unigrams + bigrams)
+        │
+        ├─────────────────────┐
+        ▼                     ▼
+ML Sentiment             Emotion Lexicon
+Classification           Detection
+├── Logistic Regression  ├── Joy 😊
+│   (77.61%) 🏆          ├── Sadness 😢
+├── Naïve Bayes          ├── Anger 😠
+│   (76.08%)             ├── Fear 😨
+└── Linear SVM           ├── Surprise 😲
+    (76.05%)             └── Anticipation 🤩
+        │                     │
+        └──────────┬──────────┘
+                   ▼
+    Combined Analysis + Confidence Score
+    (Sentiment + Emotion + Certainty %)
+```
 ---
 
 ## Tech Stack
@@ -109,21 +118,7 @@ The model performs equally well on both classes with no bias — 15,239 correct 
 ## Sample Output
 
 ![Confidence Score](screenshots/Confidence%20score%20output.png)
-examples:
-📝 Tweet     : I hate Mondays, so tired and bored
-💬 Sentiment : 🔴 Negative
-📊 Confidence: 88.0% (Very Confident)
-❤️  Emotion   : 😠 ANGER
 
-📝 Tweet     : Best day of my life, so grateful!
-💬 Sentiment : 🟢 Positive
-📊 Confidence: 91.8% (Very Confident)
-❤️  Emotion   : 😊 JOY
-
-📝 Tweet     : This is okay I guess
-💬 Sentiment : 🟢 Positive
-📊 Confidence: 57.0% (Uncertain)
-❤️  Emotion   : 😶 NEUTRAL
 
 ---
 
