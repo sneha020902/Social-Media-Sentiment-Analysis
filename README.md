@@ -19,8 +19,8 @@ But sentiment alone (positive/negative) is not enough. Two people can both post 
 
 ## What This Project Does
 
-- Classifies posts as **Positive** or **Negative** using 3 trained ML models
-- Provides a **confidence score** showing how certain the model is (e.g. 94.2% Negative)
+- **Part 1 — Classical ML:** Classifies posts using 3 trained ML models with confidence scores and emotion detection
+- **Part 2 — Deep Learning:** Bidirectional LSTM neural network (PyTorch) trained on GPU — 4.9M parameters, 77.3% accuracy
 - Detects the **dominant emotion**: Joy 😊, Sadness 😢, Anger 😡, Fear 😨, Surprise 😲, Anticipation 🤩
 - Includes an **interactive post analyzer** — type any text and get instant results
 - Visualizes **emotion distribution** across positive vs negative posts
@@ -29,6 +29,7 @@ But sentiment alone (positive/negative) is not enough. Two people can both post 
 
 ## Architecture
 
+### Part 1 — Classical ML Pipeline
 ```
 Raw Social Media Post
         │
@@ -59,6 +60,9 @@ Classification           Detection
     Combined Analysis + Confidence Score
     (Sentiment + Emotion + Certainty %)
 ```
+
+### Part 2 — Bidirectional LSTM (PyTorch)
+
 ---
 
 ## Tech Stack
@@ -66,25 +70,46 @@ Classification           Detection
 | Tool | Purpose |
 |---|---|
 | Python | Core programming language |
-| NLTK | Text preprocessing — tokenization, stopwords, lemmatization |
-| Scikit-learn | ML models + TF-IDF vectorization |
+| **PyTorch** | **Bidirectional LSTM neural network — GPU training** |
+| NLTK | Text preprocessing — tokenization, stopwords |
+| Scikit-learn | Classical ML models + TF-IDF vectorization |
 | Pandas & NumPy | Data loading and manipulation |
-| Matplotlib & Seaborn | Charts and confusion matrix |
+| Matplotlib & Seaborn | Charts, training curves, confusion matrix |
 | WordCloud | Visual representation of frequent words |
-| ipywidgets | Interactive post analyzer UI |
-| Google Colab | Development environment |
+| Google Colab (T4 GPU) | GPU-accelerated training environment |
 
 ---
 
-## Dataset
+## 📁 Dataset
 
 - **Source:** [Sentiment140 — Kaggle](https://www.kaggle.com/kazanova/sentiment140)
 - **Size:** 1.6 million tweets, balanced (800K positive, 800K negative)
-- **Used:** 200,000 sampled posts (100K per class) for efficient training
+- **Used:** 200,000 sampled posts (100K per class)
 
 ---
 
-## Screenshots
+## Model Performance
+
+### Part 1 — Classical ML
+| Model | Accuracy |
+|---|---|
+| Logistic Regression  | 77.61% |
+| Naïve Bayes | 76.08% |
+| Linear SVM | 76.05% |
+
+### Part 2 — Bidirectional LSTM (PyTorch)
+| Metric | Score |
+|---|---|
+| Parameters | 4,928,001 |
+| Best Val Accuracy | **77.31%** |
+| Precision | 0.77 |
+| Recall | 0.77 |
+| F1-Score | 0.77 |
+| Training Device | NVIDIA T4 GPU |
+
+---
+
+## Part 1 — Classical ML Screenshots
 
 ### Model Accuracy Comparison
 ![Model Accuracy](screenshots/model-accuracy-comparison.png)
@@ -98,27 +123,59 @@ Classification           Detection
 ### Confidence Score Output
 ![Confidence Score](screenshots/Confidence%20score%20output.png)
 
-### Emotion Distribution — Positive vs Negative Posts
+### Emotion Distribution
 ![Emotion Distribution](screenshots/Emotion%20distribution%20chart%20.png)
 
 ---
 
-## Model Performance
+## 🧠 Part 2 — Deep Learning: Bidirectional LSTM (PyTorch)
 
-| Model | Accuracy |
-|---|---|
-| Logistic Regression | 77.61% |
-| Naïve Bayes | 76.08%|
-| Linear SVM | 76.05% |
+### Training Progress
+![Training Table](screenshots/LSTM_training_table.png)
 
-The model performs equally well on both classes with no bias — 15,239 correct negative predictions and 15,805 correct positive predictions out of 40,000 test posts.
+### Training Curves
+![Training Curves](screenshots/LSTM_training_curves.png)
+
+### Classification Report
+![Classification Report](screenshots/LSTM_classification_report.png)
+
+### Confusion Matrix — Bidirectional LSTM
+![LSTM Confusion Matrix](screenshots/LSTM_confusion_matrix.png)
+
+### Live Predictions with Confidence Scores
+![Predictions](screenshots/LSTM_predictions.png)
 
 ---
 
-## Sample Output
+## 💡 What I Learned
 
-![Confidence Score](screenshots/Confidence%20score%20output.png)
+- How NLP preprocessing works: cleaning, tokenizing, lemmatizing text at scale
+- The difference between TF-IDF and neural word embeddings
+- How to build and train a Bidirectional LSTM from scratch using PyTorch
+- How GPU-accelerated training (CUDA) speeds up deep learning significantly
+- How to implement a full training loop with loss, backprop, gradient clipping
+- How to interpret precision, recall, F1-score and confusion matrices
+- How confidence scores (predict_proba + sigmoid) add nuance to classification
+- How emotion detection bridges NLP and emotional intelligence research
 
+---
+
+## Future Improvements
+
+- [x] ~~Use deep learning for sentiment analysis~~ ✅ Done — Bidirectional LSTM
+- [ ] Fine-tune **BERT / RoBERTa** for further accuracy improvement
+- [ ] Connect to the **X API** for real-time post analysis
+- [ ] Build a **Flask/FastAPI** web app to demo the model live
+- [ ] Add **multi-language** support
+
+---
+
+## Notebooks
+
+| Notebook | Description |
+|---|---|
+| `sentiment-emotion-analysis.ipynb` | Classical ML — TF-IDF + Scikit-learn + Emotion Detection |
+| `lstm-sentiment-analysis.ipynb` | Deep Learning — Bidirectional LSTM with PyTorch |
 
 ---
 
@@ -126,43 +183,22 @@ The model performs equally well on both classes with no bias — 15,239 correct 
 
 ### Option 1 — Google Colab (Recommended)
 1. Open [Google Colab](https://colab.research.google.com)
-2. Upload `sentiment-emotion-analysis.ipynb`
+2. Upload the notebook you want to run
 3. Upload the Sentiment140 dataset
-4. Run all cells
+4. Enable GPU: `Runtime → Change runtime type → T4 GPU`
+5. Run all cells
 
 ### Option 2 — Local
 ```bash
 git clone https://github.com/sneha020902/Social-Media-Sentiment-Analysis.git
 cd Social-Media-Sentiment-Analysis
-pip install pandas numpy scikit-learn nltk matplotlib seaborn wordcloud ipywidgets
+pip install pandas numpy scikit-learn nltk matplotlib seaborn wordcloud ipywidgets torch
 jupyter notebook
 ```
 
 ---
 
-## What I Learned
-
-- How NLP preprocessing works: cleaning text, removing noise, tokenizing, lemmatizing
-- The difference between TF-IDF and Count Vectorization and when to use each
-- How to train, evaluate, and compare multiple ML classifiers on the same task
-- How to interpret precision, recall, and F1-score beyond just accuracy
-- How confidence scores (predict_proba) add nuance to binary classification
-- How emotion detection bridges sentiment analysis and emotional intelligence research
-- The importance of balanced datasets in classification problems
-
----
-
-## Future Improvements
-
-- [ ] Use **BERT / Transformers** for deep learning-based sentiment analysis
-- [ ] Connect to the **X API** for real-time post analysis
-- [ ] Build a **Flask/FastAPI** web app to demo the model live
-- [ ] Expand emotion lexicon with a larger vocabulary
-- [ ] Add **multi-language** support
-
----
-
 ## Author
 
-**Sneha Agrawal** — Aspiring Cloud & DevOps Engineer  
+**Sneha Agrawal** — Aspiring Cloud & DevOps / ML Engineer  
 🔗 [LinkedIn](https://www.linkedin.com/in/-snehaagrawal/) · [GitHub](https://github.com/sneha020902) · [Portfolio](https://sneha020902.github.io)
