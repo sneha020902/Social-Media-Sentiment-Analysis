@@ -1,6 +1,6 @@
 # Social Media Sentiment & Emotion Analysis
 
-> Automatically classifies social media posts as **positive** or **negative** and detects the underlying **human emotion** — joy, sadness, anger, fear, surprise, or anticipation — using NLP and machine learning.
+> > NLP sentiment analysis system using classical ML and PyTorch Bidirectional LSTM trained on 1.6M social media posts with GPU acceleration and emotion detection.
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white)
